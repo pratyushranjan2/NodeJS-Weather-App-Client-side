@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 // express is a function only
 const app = express();
+const port = process.env.PORT || 3000; // || in local then 3000, if on heroku then through PORT
 const hbs = require('hbs');
 
 const geocode = require('./utils/geocode');
@@ -119,6 +120,6 @@ app.get('*',(req,res)=> {
     });
 });
 // start the server up
-app.listen(3000, ()=> {
-    console.log('Server is up on port 3000');
+app.listen(port, ()=> {
+    console.log('Server is up on port '+port);
 });
