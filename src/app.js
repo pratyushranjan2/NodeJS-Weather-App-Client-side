@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 // express is a function only
 const app = express();
-const port = process.env.PORT || 3000; // || in local then 3000, if on heroku then through PORT
+const port = process.env.PORT || 3000; // || if in local then 3000, if on heroku then through env.PORT
 const hbs = require('hbs');
 
 const geocode = require('./utils/geocode');
