@@ -11,7 +11,7 @@ const forecast = (latitude, longitude, callback) => {
             callback('Unable to get the weather data');
         }
         else {
-            data = body.current.weather_descriptions[0]+'. The temperature is '+body.current.temperature+'. It feels like '+body.current.feelslike+'.';
+            data = body.current.weather_descriptions[0]+'. The temperature is '+body.current.temperature+'. It feels like '+body.current.feelslike+'. The humidity is '+body.current.humidity+'%.';
             callback(undefined,data);
         }
     });
