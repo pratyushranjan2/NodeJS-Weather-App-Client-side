@@ -54,3 +54,7 @@ button {
     padding: 8px;
     border-radius: 4px;
 }
+
+#use-current-location {
+    margin-top: 5px;
+}

@@ -21,4 +21,22 @@ const geocode = (address,callback) => {
     });
 }
 
-module.exports = geocode;
+const reverseGeocode = (latitude, longitude, callback) => {
+    const uri = `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=pk.eyJ1IjoicHJhdHl1c2gwMiIsImEiOiJja3BpZ3A0amkwMjByMm5xcjVmNjJoZWIxIn0.q5_sBqlqCznAdrBpN_ol-Q`;
+    request({uri, json:true}, (error, {body}) => {
+        if (error) {
+            callback('Could not determine address');
+        }
+        else if (body.features && body.features.length == 0) {
+            callback('No address found');
+        }
+        else if (body.message) {
+            callback('Coordinates invalid');
+        }
+        else {
+            callback(undefined, body.features[0].place_name);
+        }
+    })
+}
+
+module.exports = {geocode, reverseGeocode};

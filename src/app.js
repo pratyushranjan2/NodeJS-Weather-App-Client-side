@@ -5,7 +5,7 @@ const app = express();
 const port = process.env.PORT || 3000; // || if in local then 3000, if on heroku then through env.PORT
 const hbs = require('hbs');
 
-const geocode = require('./utils/geocode');
+const {geocode, reverseGeocode} = require('./utils/geocode');
 const forecast = require('./utils/forecast');
 // app.com
 // app.com/help
@@ -64,31 +64,47 @@ app.get('/help', (req,res)=> {
 // });
 
 app.get('/weather',(req,res)=>{
-    if (!req.query.address) {
-        return res.send({
-            error: 'Provide an address'
-        });
+    if (req.query.latitude && req.query.longitude) {
+        reverseGeocode(req.query.latitude, req.query.longitude, (error, address) => {
+            if (error) {
+                return res.send({error});
+            }
+            forecast(req.query.latitude, req.query.longitude, (error,data) => {
+                if (error) {
+                    return res.send({error});
+                }
+                return res.send({address, data});
+                //console.log(data);
+            });
+        })
     }
-    const address = req.query.address;
-    geocode(address, (error,{latitude,longitude,location}={})=>{
-        if (error) {
+    else {
+        if (!req.query.address) {
             return res.send({
-                error
+                error: 'Provide an address'
             });
         }
-        forecast(latitude, longitude, (error,data)=>{
+        const address = req.query.address;
+        geocode(address, (error,{latitude,longitude,location}={})=>{
             if (error) {
                 return res.send({
                     error
                 });
             }
-            res.send({
-                data,
-                location,
-                address
+            forecast(latitude, longitude, (error,data)=>{
+                if (error) {
+                    return res.send({
+                        error
+                    });
+                }
+                res.send({
+                    data,
+                    location,
+                    address
+                });
             });
         });
-    });
+    }
 });
 
 app.get('/products', (req, res) => {
